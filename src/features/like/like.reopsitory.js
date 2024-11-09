@@ -2,6 +2,9 @@ import ApplicationError from "../../middleware/applicationError.js";
 import mongoose from "mongoose";
 import { likeSchema } from "./like.schema.js";
 import { ObjectId } from "mongodb";
+import { postSchema } from "../post/post.schema.js";
+const PostModel = mongoose.model('Post', postSchema)
+
 const LikeModel = mongoose.model('Like', likeSchema)
 export default class LikeRepository {
 
@@ -10,13 +13,13 @@ export default class LikeRepository {
     async getByPostId(id) {
 
         try {
-            let likes = await LikeModel.find({ likeable: id }).populate('userId' ,'_id name email')
+            let likes = await LikeModel.find({ likeable: id }).populate('userId', '_id name email')
             return likes;
         } catch (error) {
             throw new ApplicationError('Something went wrong while fetching all likes', 400)
         }
 
-    } 
+    }
     // Toggle the like status for a post by a user
     async toggle(userId, postId, types) {
         try {
@@ -24,7 +27,7 @@ export default class LikeRepository {
             if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(postId)) {
                 throw new ApplicationError('Invalid ID format', 400);
             }
-  
+
             // Find if the like already exists
             let liked = await LikeModel.findOne({ userId: userId, likeable: postId });
 
@@ -32,15 +35,18 @@ export default class LikeRepository {
                 // If like does not exist, add it (like)
                 let newLike = new LikeModel({ userId, likeable: postId, types });
                 await newLike.save();
+                // let post = await PostModel.findById(postId);
+                await PostModel.findByIdAndUpdate(postId, { $push: { likes: userId } }, { new: true })
                 return "Like is added";
             } else {
                 // If like exists, remove it (unlike)
                 await LikeModel.findByIdAndDelete(liked._id);
+                await PostModel.findByIdAndUpdate(postId, { $pull: { likes: userId } }, { new: true })
                 return "Like is removed";
             }
         } catch (error) {
             if (error instanceof ApplicationError) {
-                throw error; 
+                throw error;
             }
             console.error(error);
             throw new ApplicationError('Something went wrong while toggling like', 400);

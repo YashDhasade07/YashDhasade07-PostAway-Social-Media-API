@@ -71,21 +71,21 @@ export default class PostController {
             }
             next(new ApplicationError('Something went wrong', 400))
         }
-    }
+    } 
 
     async delete(req, res, next) {
         try {
             let id = req.params.id;
             let userId = req.userId;
-            await this.postRepository.delete(id , userId);
+            await this.postRepository.delete(id, userId);
             res.status(200).send('post deleted sucessfully');
         } catch (error) {
             console.log(error);
             if (error instanceof ApplicationError) {
                 next(error);
             }
-            next( new ApplicationError('Something went wrong while deleting the post', 400))
-            
+            next(new ApplicationError('Something went wrong while deleting the post', 400))
+
         }
 
     }
@@ -103,7 +103,7 @@ export default class PostController {
                 next(error);
             }
             next(new ApplicationError('Something went wrong', 400))
-            
+
         }
 
     }

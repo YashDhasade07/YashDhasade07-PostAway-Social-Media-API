@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger.json' assert { type: 'json' }; 
+import swaggerDocument from './swagger.json' assert { type: 'json' };
 import userRouter from './src/features/user/user.routes.js';
 import postRouter from './src/features/post/post.routes.js';
 import CommentRouter from './src/features/comment/comment.routes.js';
@@ -19,7 +19,7 @@ let server = express();
 
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 server.use(cors());
-server.use(cookieParser()); 
+server.use(cookieParser());
 server.use(express.json());
 server.use(bodyParser.json());
 
@@ -27,7 +27,7 @@ server.use('/api/likes', jwtAuth, loggerMiddleware, likeRouter)
 server.use('/api/comments', jwtAuth, loggerMiddleware, CommentRouter)
 server.use('/api/posts', jwtAuth, loggerMiddleware, postRouter)
 server.use('/api/friends', jwtAuth, loggerMiddleware, FriendshipRouter)
-server.use('/api/otp',jwtAuth, otpRouter)
+server.use('/api/otp', jwtAuth, otpRouter)
 server.use('/api/users', userRouter)
 
 
@@ -46,6 +46,6 @@ server.use((req, res) => {
 
 })
 server.listen(3000, () => {
-    console.log('Server is listening on port 3000');
+    console.log('Server is listening on port 3000'); 
     connectUsingMongoose();
 })

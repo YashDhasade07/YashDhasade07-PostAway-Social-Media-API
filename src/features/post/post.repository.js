@@ -32,7 +32,7 @@ export default class PostRepository {
             return post;
         } catch (error) {
             if (error instanceof ApplicationError) {
-                throw error; 
+                throw error;
             }
             console.error(error);
             throw new ApplicationError('Something went wrong while fetching post by ID', 400);
@@ -45,7 +45,7 @@ export default class PostRepository {
             const userPosts = await PostModel.find({ userId: userId });
             return userPosts; // / Find and return post by ID
         } catch (error) {
-            throw new ApplicationError('Something went wrong while fetching  post by id', 400)
+            throw new ApplicationError('Something went wrong while fetching post by id', 400)
         }
 
     }
